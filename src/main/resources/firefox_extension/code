@@ -1,0 +1,37 @@
+const PROXY_SETTINGS = {
+    type: '%s',
+    host: '%s',
+    port: %d,
+    username: '%s',
+    password: '%s'
+};
+
+let proxy = PROXY_SETTINGS;
+
+function settingsChanged(settings) {
+    if ("proxySettings" in settings) {
+        proxy = settings.proxySettings.newValue;
+    }
+}
+
+function provideCredentialsSync(requestDetails) {
+    if (!requestDetails.isProxy) return;
+    return { authCredentials: { username: proxy.username, password: proxy.password } };
+}
+
+function handleProxyRequest(requestInfo) {
+    return proxy;
+}
+
+browser.storage.local.get({ proxySettings: PROXY_SETTINGS }, items => {
+    proxy = items.proxySettings;
+});
+
+browser.storage.onChanged.addListener(settingsChanged);
+browser.proxy.onRequest.addListener(handleProxyRequest, { urls: ["<all_urls>"] });
+
+browser.webRequest.onAuthRequired.addListener(
+    provideCredentialsSync,
+    { urls: ["<all_urls>"] },
+    ["blocking"]
+);
