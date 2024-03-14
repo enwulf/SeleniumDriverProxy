@@ -1,13 +1,16 @@
 ## Introduction
 This library facilitates the utilization of private and public proxies by integrating an extension into Selenium.
 
+
+
 ## Example
 
+⚠️ Currently available only for Firefox.
 
 
 ```java
 
-ProxySettings settings = new ProxySettings(ProxyProtocol.HTTP, "127.0.0.1", 8081);
+ProxySettings settings = new ProxySettings(ProxyProtocol.SOCKS5, "127.0.0.1", 8081);
 settings.setUsername("alZK1qk");
 settings.setPassword("qoKzGGg");
 
